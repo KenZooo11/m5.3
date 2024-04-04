@@ -7,6 +7,9 @@ class BusinessCard:
         self.company = company
         self.position = position
         self.email = email
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}: {self.email}"
 
 business_cards = []
 
@@ -19,7 +22,7 @@ for _ in range(5):
     business_cards.append(BusinessCard(first_name, last_name, company, position, email))
 
 for card in business_cards:
-    print(f"{card.first_name} {card.last_name}: {card.email}")
+    print(card)
 
 from faker import Faker
 
