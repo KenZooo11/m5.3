@@ -10,6 +10,9 @@ class BusinessCard:
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}: {self.email}"
+    
+    def contact(self):
+        print(f"Kontaktuję się z {self.first_name} {self.last_name}, {self.position}, {self.email}")
 
 business_cards = []
 
@@ -21,7 +24,9 @@ for _ in range(5):
     email = f"{first_name.lower()}.{last_name.lower()}@{company.replace(' ', '').lower()}.com"
     business_cards.append(BusinessCard(first_name, last_name, company, position, email))
 
-print("Przed sortowaniem:")
+business_cards[0].contact()
+
+print("\nPrzed sortowaniem:")
 for card in business_cards:
     print(card)
 
