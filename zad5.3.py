@@ -21,7 +21,23 @@ for _ in range(5):
     email = f"{first_name.lower()}.{last_name.lower()}@{company.replace(' ', '').lower()}.com"
     business_cards.append(BusinessCard(first_name, last_name, company, position, email))
 
+print("Przed sortowaniem:")
 for card in business_cards:
+    print(card)
+
+print("\nPo sortowaniu według imienia:")
+sorted_by_first_name = sorted(business_cards, key=lambda x: x.first_name)
+for card in sorted_by_first_name:
+    print(card)
+
+print("\nPo sortowaniu według nazwiska:")
+sorted_by_last_name = sorted(business_cards, key=lambda x: x.last_name)
+for card in sorted_by_last_name:
+    print(card)
+
+print("\nPo sortowaniu według adresu e-mail:")
+sorted_by_email = sorted(business_cards, key=lambda x: x.email)
+for card in sorted_by_email:
     print(card)
 
 from faker import Faker
@@ -37,7 +53,7 @@ def generate_random_business_card():
     return BusinessCard(first_name, last_name, company, position, email)
 
 random_card = generate_random_business_card()
-print(f"Imię: {random_card.first_name}")
+print(f"\nImię: {random_card.first_name}")
 print(f"Nazwisko: {random_card.last_name}")
 print(f"Firma: {random_card.company}")
 print(f"Stanowisko: {random_card.position}")
