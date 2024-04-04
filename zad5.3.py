@@ -14,6 +14,10 @@ class BusinessCard:
     def contact(self):
         print(f"Kontaktuję się z {self.first_name} {self.last_name}, {self.position}, {self.email}")
 
+    @property
+    def full_name_length(self):
+        return len(self.first_name) + len(self.last_name)
+
 business_cards = []
 
 for _ in range(5):
@@ -25,6 +29,9 @@ for _ in range(5):
     business_cards.append(BusinessCard(first_name, last_name, company, position, email))
 
 business_cards[0].contact()
+
+for card in business_cards:
+    print(f"\nDługość imienia i nazwiska dla {card.first_name} {card.last_name}: {card.full_name_length}")
 
 print("\nPrzed sortowaniem:")
 for card in business_cards:
