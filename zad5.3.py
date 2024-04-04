@@ -1,4 +1,5 @@
 import random
+from faker import Faker
 
 class BusinessCard:
     def __init__(self, first_name, last_name, company, position, email):
@@ -11,60 +12,62 @@ class BusinessCard:
     def __str__(self):
         return f"{self.first_name} {self.last_name}: {self.email}"
     
-    def contact(self):
-        print(f"Kontaktuję się z {self.first_name} {self.last_name}, {self.position}, {self.email}")
-
     @property
     def full_name_length(self):
         return len(self.first_name) + len(self.last_name)
 
+class BaseContact(BusinessCard):
+    def __init__(self, first_name, last_name, email, base_phone):
+        super().__init__(first_name, last_name, None, None, email)
+        self.base_phone = base_phone
+        
+    def contact(self):
+        print(f"Wybieram numer prywatny +48 {self.base_phone} i dzwonię do {self.first_name} {self.last_name}")
+
+    @property
+    def label_length(self):
+        return super().full_name_length
+
+class BusinessContact(BusinessCard):
+    def __init__(self, first_name, last_name, email, position, company, business_phone):
+        super().__init__(first_name, last_name, company, position, email)
+        self.business_phone = business_phone
+        
+    def contact(self):
+        print(f"Wybieram numer służbowy +48 {self.business_phone} i dzwonię do {self.first_name} {self.last_name}")
+   
+    @property
+    def label_length(self):
+        return super().full_name_length
+
 business_cards = []
 
-for _ in range(5):
-    first_name = random.choice(["John", "Emma", "Michael", "Emily", "Daniel"])
-    last_name = random.choice(["Smith", "Johnson", "Williams", "Brown", "Jones"])
-    company = random.choice(["ABC Corp", "XYZ Company", "Tech Solutions", "Global Industries", "Innovative Ventures"])
-    position = random.choice(["Manager", "Director", "CEO", "CFO", "CTO"])
-    email = f"{first_name.lower()}.{last_name.lower()}@{company.replace(' ', '').lower()}.com"
-    business_cards.append(BusinessCard(first_name, last_name, company, position, email))
+fake = Faker()
+
+def create_contacts():
+    first_name = fake.first_name()
+    last_name = fake.last_name()
+    email = fake.email()
+    contact_type = random.choice([BaseContact, BusinessContact])
+    base_phone = str(random.randint(100000000, 999999999)).zfill(9)
+    if contact_type == BusinessContact:
+        position = fake.job()
+        company = fake.company()
+        business_phone = str(random.randint(100000000, 999999999)).zfill(9)
+        return contact_type(first_name, last_name, email, position, company, business_phone)
+    else:
+        return contact_type(first_name, last_name, email, base_phone)
+
+for _ in range(1):
+    contact = create_contacts()
+    business_cards.append(contact)
 
 business_cards[0].contact()
 
 for card in business_cards:
-    print(f"\nDługość imienia i nazwiska dla {card.first_name} {card.last_name}: {card.full_name_length}")
+    print(f"\nDługość imienia i nazwiska dla {card.first_name} {card.last_name}: {card.label_length}")
 
-print("\nPrzed sortowaniem:")
-for card in business_cards:
-    print(card)
-
-print("\nPo sortowaniu według imienia:")
-sorted_by_first_name = sorted(business_cards, key=lambda x: x.first_name)
-for card in sorted_by_first_name:
-    print(card)
-
-print("\nPo sortowaniu według nazwiska:")
-sorted_by_last_name = sorted(business_cards, key=lambda x: x.last_name)
-for card in sorted_by_last_name:
-    print(card)
-
-print("\nPo sortowaniu według adresu e-mail:")
-sorted_by_email = sorted(business_cards, key=lambda x: x.email)
-for card in sorted_by_email:
-    print(card)
-
-from faker import Faker
-
-fake = Faker()
-
-def generate_random_business_card():
-    first_name = fake.first_name()
-    last_name = fake.last_name()
-    company = fake.company()
-    position = fake.job()
-    email = fake.email()
-    return BusinessCard(first_name, last_name, company, position, email)
-
-random_card = generate_random_business_card()
+random_card = create_contacts()
 print(f"\nImię: {random_card.first_name}")
 print(f"Nazwisko: {random_card.last_name}")
 print(f"Firma: {random_card.company}")
