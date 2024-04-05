@@ -1,36 +1,25 @@
 import random
 from faker import Faker
 
-class BusinessCard:
-    def __init__(self, first_name, last_name, company, position, email):
+class BaseContact:
+    def __init__(self, first_name, last_name, email, phone_number):
         self.first_name = first_name
         self.last_name = last_name
-        self.company = company
-        self.position = position
         self.email = email
+        self.phone_number = phone_number
     
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}: {self.email}"
-    
-    @property
-    def full_name_length(self):
-        return len(self.first_name) + len(self.last_name)
-
-class BaseContact(BusinessCard):
-    def __init__(self, first_name, last_name, email, base_phone):
-        super().__init__(first_name, last_name, None, None, email)
-        self.base_phone = base_phone
-        
     def contact(self):
-        print(f"Wybieram numer prywatny +48 {self.base_phone} i dzwonię do {self.first_name} {self.last_name}")
+        print(f"Wybieram numer prywatny +48 {self.phone_number} i dzwonię do {self.first_name} {self.last_name}")
 
     @property
     def label_length(self):
-        return super().full_name_length
+        return len(self.first_name) + len(self.last_name)
 
-class BusinessContact(BusinessCard):
-    def __init__(self, first_name, last_name, email, position, company, business_phone):
-        super().__init__(first_name, last_name, company, position, email)
+class BusinessContact(BaseContact):
+    def __init__(self, first_name, last_name, email, phone_number, position, company, business_phone):
+        super().__init__(first_name, last_name, email, phone_number)
+        self.position = position
+        self.company = company
         self.business_phone = business_phone
         
     def contact(self):
@@ -38,7 +27,7 @@ class BusinessContact(BusinessCard):
    
     @property
     def label_length(self):
-        return super().full_name_length
+        return len(self.first_name) + len(self.last_name)
 
 business_cards = []
 
@@ -48,15 +37,16 @@ def create_contacts():
     first_name = fake.first_name()
     last_name = fake.last_name()
     email = fake.email()
+    phone_number = str(random.randint(100000000, 999999999)).zfill(9)
     contact_type = random.choice([BaseContact, BusinessContact])
-    base_phone = str(random.randint(100000000, 999999999)).zfill(9)
+    
     if contact_type == BusinessContact:
         position = fake.job()
         company = fake.company()
         business_phone = str(random.randint(100000000, 999999999)).zfill(9)
-        return contact_type(first_name, last_name, email, position, company, business_phone)
+        return contact_type(first_name, last_name, email, phone_number, position, company, business_phone)
     else:
-        return contact_type(first_name, last_name, email, base_phone)
+        return contact_type(first_name, last_name, email, phone_number)
 
 for _ in range(1):
     contact = create_contacts()
@@ -70,6 +60,7 @@ for card in business_cards:
 random_card = create_contacts()
 print(f"\nImię: {random_card.first_name}")
 print(f"Nazwisko: {random_card.last_name}")
-print(f"Firma: {random_card.company}")
-print(f"Stanowisko: {random_card.position}")
+if isinstance(random_card, BusinessContact):
+    print(f"Firma: {random_card.company}")
+    print(f"Stanowisko: {random_card.position}")
 print(f"Email: {random_card.email}")
