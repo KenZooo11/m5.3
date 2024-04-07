@@ -20,8 +20,8 @@ class PrywatnyKontakt:
         return f"Imię: {self.first_name}\nNazwisko: {self.last_name}\nEmail: {self.email}\nNumer telefonu: {self.phone_number}"
 
 class SluzbowyKontakt(PrywatnyKontakt):
-    def __init__(self, *args, position=None, company=None, business_phone=None, **kwargs):
-        super().__init__(*args[:4], **kwargs)  
+    def __init__(self, position, company, business_phone, *args, **kwargs):
+        super().__init__(*args, **kwargs)  
         self.position = position
         self.company = company
         self.business_phone = business_phone
@@ -49,7 +49,7 @@ def create_contacts(rodzaj_wizytowki, ilosc):
             position = fake.job()
             company = fake.company()
             business_phone = str(random.randint(100000000, 999999999)).zfill(9)
-            contact = SluzbowyKontakt(first_name, last_name, email, phone_number, position=position, company=company, business_phone=business_phone)
+            contact = SluzbowyKontakt(position, company, business_phone, first_name, last_name, email, phone_number)
         else:
             raise ValueError("Nieprawidłowy rodzaj wizytówki")
 
